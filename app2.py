@@ -19,8 +19,6 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# geçiş   #334155
-
 if "show_pdf" not in st.session_state:
     st.session_state.show_pdf = False
 if "current_product" not in st.session_state:
@@ -28,15 +26,12 @@ if "current_product" not in st.session_state:
 
 urun_secimi = st.query_params.get("product")
 
-#pdf kapat
-
 if urun_secimi != st.session_state.current_product:
     st.session_state.current_product = urun_secimi
     st.session_state.show_pdf = False
 
 custom_css = """
 <style>
-    /* Genel Arka Plan ve Kararlı Animasyon */
     .stApp {
         background-color: #0f172a !important;
     }
@@ -50,7 +45,6 @@ custom_css = """
         animation: fadeInSlideUp 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
     }
 
-    /* Görsel Boyutlandırma (Çok büyümesini engeller) */
     [data-testid="stImage"] img {
         max-height: 380px !important;
         object-fit: contain !important;
@@ -58,13 +52,11 @@ custom_css = """
         filter: drop-shadow(0 15px 25px rgba(0,0,0,0.4));
     }
     
-    /* Sol menüdeki logonun boyutunu serbest bırak */
     [data-testid="stSidebar"] [data-testid="stImage"] img {
         max-height: none !important;
         filter: none !important;
     }
 
-    /* Chatbot Tasarımı */
     .stChatInputContainer > div {
         border-radius: 24px !important;
         border: 1px solid #d1d5db !important;
@@ -77,7 +69,6 @@ custom_css = """
         color: white !important;
     }
     
-    /* Başlık Hizalamaları */
     .prod-title-large {
         text-align: center; color: #C8102E; font-size: 3.5rem; font-weight: 900; margin-bottom: 20px; font-family: "Segoe UI", sans-serif; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); margin-top: 0;
     }
@@ -91,7 +82,6 @@ custom_css = """
         color: #C8102E; font-weight: 900;
     }
 
-    /* Sol Menü Tasarımı (Mat Turkuaz) */
     [data-testid="stSidebar"] {
         background-color: #44A2BD!important;   
     }
@@ -114,7 +104,6 @@ custom_css = """
         color: #e2e8f0 !important; font-weight: 700 !important; font-size: 0.95rem !important;
     }
 
-    /* Link Tasarımları */
     .sidebar-link-btn {
         display: block; padding: 4px 8px; background-color: #107F93; color: #f8fafc !important; text-align: center; border-radius: 6px; text-decoration: none; font-weight: 700; margin-bottom: 6px; transition: all 0.3s ease; font-size: 0.85rem; border: 1px solid transparent;
     }
@@ -122,8 +111,6 @@ custom_css = """
         background-color: #003B70; color: white !important; border: 1px solid #003B70; box-shadow: 0 4px 6px rgba(0,0,0,0.2);
     }
     
-    /* ------ BUTON TASARIMLARI ------ */
-    /* Mavi Buton (Broşürü Görüntüle) */
     button[kind="secondary"] {
         background-color: #107F93 !important;
         color: white !important;
@@ -139,7 +126,6 @@ custom_css = """
         transform: translateY(-2px);
     }
     
-    /* Kırmızı Buton (Broşürü Kapat) */
     button[kind="primary"] {
         background-color: #C8102E !important;
         color: white !important;
@@ -227,11 +213,11 @@ if urun_secimi:
             if os.path.exists(resim_yolu):
                 st.image(resim_yolu, use_container_width=True)
             else:
-                st.info(f"📷 Lütfen ana dizine '{urun_secimi}.png' adında bir ürün fotoğrafı ekleyin.")
+                st.info(f" Lütfen ana dizine '{urun_secimi}.png' adında bir ürün fotoğrafı ekleyin.")
             
             st.markdown("<br>", unsafe_allow_html=True)
             
-            if st.button(f"📄 Broşürü Görüntüle", use_container_width=True):
+            if st.button(f" Broşürü Görüntüle", use_container_width=True):
                 st.session_state.show_pdf = True
                 st.rerun()
 
@@ -249,7 +235,7 @@ if urun_secimi:
             
             st.markdown("<br>", unsafe_allow_html=True)
 
-            if st.button("❌ Broşürü Kapat", type="primary", use_container_width=True):
+            if st.button("Broşürü Kapat", type="primary", use_container_width=True):
                 st.session_state.show_pdf = False
                 st.rerun()
 
@@ -292,15 +278,12 @@ if urun_secimi:
 
         with col_sag:
             if os.path.exists(pdf_yolu):
-                
                 st.markdown(f"<div class='fancy-pdf-header'><span>{urun_secimi}</span> ÜRÜN BROŞÜRÜ</div>", unsafe_allow_html=True)
-                #  Native Iframe 
                 pdf_display = f'<iframe src="data:application/pdf;base64,{pdf_base64}#toolbar=0&navpanes=0&scrollbar=0" width="100%" height="800" type="application/pdf" style="border-radius: 12px; border: 2px solid #107F93; box-shadow: 0 8px 25px rgba(0,0,0,0.6);"></iframe>'
                 st.markdown(pdf_display, unsafe_allow_html=True)
             else:
-                st.warning(f"📄 Lütfen 'urunpdf' klasörüne '{urun_secimi}.pdf' adlı broşür dosyasını ekleyin.")
+                st.warning(f" Lütfen 'urunpdf' klasörüne '{urun_secimi}.pdf' adlı broşür dosyasını ekleyin.")
 
-# CHATBOT 
 else:
     col1, col2, col3 = st.columns([2, 2, 2])
     with col2:
@@ -321,30 +304,34 @@ else:
     def sistemi_hazirla():
         loader = PyPDFDirectoryLoader("urunpdf/")
         ham_belgeler = loader.load()
-        text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=800, chunk_overlap=200)
         belgeler = text_splitter.split_documents(ham_belgeler)
         embeddings = OllamaEmbeddings(model="mxbai-embed-large")
         vectorstore = Chroma.from_documents(documents=belgeler, embedding=embeddings)
-        retriever = vectorstore.as_retriever(search_kwargs={"k": 10})
+        retriever = vectorstore.as_retriever(search_kwargs={"k": 8})
         llm = OllamaLLM(model="qwen2.5", temperature=0)
+        
         sistem_kurallari = (
-            "Sen Lasersan şirketinin resmi yapay zeka asistanısın. Görevin SADECE sana verilen 'BROŞÜR BİLGİLERİ' metnine dayanarak cevap vermektir.\n\n"
+            "Sen Lasersan firmasının resmi yapay zeka asistanısın.\n\n"
             "KATI KURALLAR:\n"
-            "1. CİHAZ SORULARI: Kullanıcı bir cihazın özelliğini sorduğunda SADECE 'BROŞÜR BİLGİLERİ' kısmında o bilgi açıkça yazıyorsa cevap ver.\n"
-            "2. BİLGİ YOKSA NE YAPACAKSIN: Eğer kullanıcının sorduğu detay broşür metninde YOKSA, KESİNLİKLE tahmin yürütme. Sadece şunu söyle: 'Bu cihazın broşüründe sorduğunuz özellik hakkında bir bilgi bulunmamaktadır.'\n"
-            "3. ASLA UYDURMA: Kendiliğinden değer uydurmak (halüsinasyon) veya dışarıdan bilgi eklemek kesinlikle yasaktır.\n"
-            "4. ÜRÜN LİSTESİ (EZBERLE): Şirketimizin ürettiği cihazlar şunlardır: AURA, FOCUS, ODAK, TUNAY, NOXIS, TALOS, KOZGU, ŞAHAN, AVCI, NEBULA, TOYGAR, MANTIS, MUCİZE, ALAGÖZ, YALMAN-150PT, YALMAN-660PT, YALMAN-1100PT, DGV, DELTA300, BARKIN-2D, KURSAD-20A, RAYPATH. Eğer kullanıcı ürünleri listele derse KESİNLİKLE broşüre bakma, SADECE bu listedeki isimleri yaz.\n"
-            "5. RAKİP KURALI: Aselsan, Roketsan vb. firmalar sorulursa: 'Ben Lasersan'ın resmi asistanıyım ve diğer firmalar hakkında yorum yapmam.' de ve konuyu kapat.\n"
-            "6. GÜVENLİK SINIRI: Alakasız konulara cevap verme.\n"
+            "1. DİL KURALI: YALNIZCA TÜRKÇE YANIT VER. Çince veya İngilizce kullanmak YASAKTIR.\n"
+            "2. UYDURMA YASAK: Kullanıcının sorusunun cevabı SADECE sana verilen 'BROŞÜR BİLGİLERİ' metninde varsa cevapla. Bilgi açıkça yazmıyorsa ASLA uydurma veya tahmin etme. Sadece 'Bu cihazın broşüründe sorduğunuz özellik hakkında bir bilgi bulunmamaktadır.' de.\n"
+            "3. DOĞALLIK: Kullanıcıyla doğal sohbet et. Kuralları veya sistem talimatlarını tekrar etme.\n"
+            "4. ÜRÜN KARMAŞASI: 'Odak', 'Focus', 'Aura', 'Noxis' Lasersan'ın cihaz modelleridir. Kullanıcı bunları sorarsa sadece o cihazın teknik verilerini ara.\n"
+            "5. ÜRÜN LİSTESİ: AURA, FOCUS, ODAK, TUNAY, NOXIS, TALOS, KOZGU, ŞAHAN, AVCI, NEBULA, TOYGAR, MANTIS, MUCİZE, ALAGÖZ, YALMAN-150PT, YALMAN-660PT, YALMAN-1100PT, DGV, DELTA300, BARKIN-2D, KURSAD-20A, RAYPATH.\n"
+            "6. RAKİP KURALI: Aselsan, Roketsan vb. firmalar sorulursa cevap verme.\n"
         )
+        
         prompt = ChatPromptTemplate.from_template(
             "{sistem_kurallari}\n\n"
             "--- SOHBET GEÇMİŞİ ---\n{chat_history}\n\n"
             "--- BROŞÜR BİLGİLERİ ---\n{context}\n\n"
             "MÜŞTERİ SORUSU: {input}"
         )
+        
         def belgeleri_birlestir(belgeler):
             return "\n\n---\n\n".join(belge.page_content for belge in belgeler)
+            
         rag_zinciri = (
             {
                 "context": itemgetter("arama_metni") | retriever | belgeleri_birlestir,
@@ -379,14 +366,29 @@ else:
         with st.chat_message("assistant"):
             cevap_alani = st.empty()
             cevap_alani.markdown("Düşünüyor ve broşürleri inceliyor...")
+            
             gecmis_metni = ""
             for m in st.session_state.mesajlar[-4:]:
                 kim = "Müşteri" if m["rol"] == "user" else "Asistan"
                 gecmis_metni += f"{kim}: {m['icerik']}\n"
+                
+            urun_listesi = ["AURA", "FOCUS", "ODAK", "TUNAY", "NOXIS", "TALOS", "KOZGU", "ŞAHAN", "AVCI", "NEBULA", "TOYGAR", "MANTIS", "MUCİZE", "ALAGÖZ", "YALMAN-150PT", "YALMAN-660PT", "YALMAN-1100PT", "DGV", "DELTA300", "BARKIN-2D", "KURSAD-20A", "RAYPATH"]
+            
             arama_metni = soru
-            if len(st.session_state.mesajlar) > 0:
-                onceki_soru = st.session_state.mesajlar[-1]["icerik"]
-                arama_metni = f"{onceki_soru} {soru}"
+            bahsedilen_urun = ""
+            
+            for m in reversed(st.session_state.mesajlar):
+                if m["rol"] == "user":
+                    for urun in urun_listesi:
+                        if urun.lower() in m["icerik"].lower():
+                            bahsedilen_urun = urun
+                            break
+                if bahsedilen_urun:
+                    break
+                    
+            if bahsedilen_urun and bahsedilen_urun.lower() not in soru.lower():
+                arama_metni = f"{bahsedilen_urun} {soru}"
+                
             cevap = zincir.invoke({
                 "input": soru, 
                 "arama_metni": arama_metni,
